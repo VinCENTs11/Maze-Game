@@ -7,23 +7,34 @@
         #ui { position: absolute; top: 20px; left: 20px; color: #4ade80; text-shadow: 2px 2px 4px #000; pointer-events: none; z-index: 10; }
         #resources { position: absolute; top: 20px; right: 20px; color: #4ade80; font-size: 24px; font-weight: bold; pointer-events: none; text-align: right; }
         #crosshair { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: rgba(255,255,255,0.5); font-size: 20px; pointer-events: none; }
-       
-        #instructions { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #4ade80; text-align: center; background: rgba(5,5,5,0.9); border: 1px solid #4ade80; padding: 40px; border-radius: 5px; box-shadow: 0 0 20px rgba(74, 222, 128, 0.2); cursor: pointer; z-index: 20;}
-        #instructions h1 { margin-top: 0; letter-spacing: 2px; animation: flicker 3s infinite; }
-       
+        
         #interaction-text { position: absolute; bottom: 20%; left: 50%; transform: translateX(-50%); color: white; font-size: 18px; display: none; text-shadow: 1px 1px 2px #000; }
 
         #jumpscare-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 0, 0, 0.4); display: none; z-index: 40; mix-blend-mode: overlay; }
+        #yellow-flash { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 0, 0.5); display: none; z-index: 35; mix-blend-mode: overlay; pointer-events: none; }
+        #chase-ui { position: absolute; top: 10%; left: 50%; transform: translateX(-50%); font-size: 32px; color: #ffff00; font-weight: bold; text-shadow: 0 0 15px #ff0000; display: none; text-align: center; z-index: 10;}
 
-        #death-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(150, 0, 0, 0.9); color: white; display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 50; }
-        #death-screen h1 { font-size: 80px; margin: 0; letter-spacing: 10px; text-shadow: 4px 4px 10px #000; }
+        /* --- UPDATED MENUS --- */
+        .screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5,5,5,0.95); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 50; }
+        .menu-box { border: 1px solid #4ade80; padding: 40px; border-radius: 5px; box-shadow: 0 0 20px rgba(74, 222, 128, 0.1); width: 600px; max-width: 80%; text-align: center; background: rgba(0,20,0,0.8); }
+        .menu-box h1 { margin-top: 0; letter-spacing: 4px; animation: flicker 3s infinite; color: #4ade80; text-shadow: 0 0 10px #4ade80;}
+        
+        .btn { background: transparent; color: #4ade80; border: 1px solid #4ade80; padding: 15px 30px; margin: 10px; font-size: 18px; font-family: 'Courier New', Courier, monospace; cursor: pointer; transition: all 0.2s; text-transform: uppercase; }
+        .btn:hover { background: #4ade80; color: #000; box-shadow: 0 0 15px #4ade80; }
+        .lore-text { text-align: left; font-size: 16px; line-height: 1.6; color: #aaa; margin-bottom: 30px; }
 
-        #win-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 100, 0, 0.9); color: white; display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 50; }
-        #win-screen h1 { font-size: 80px; margin: 0; letter-spacing: 10px; text-shadow: 4px 4px 10px #000; }
+        /* --- UPDATED END SCREENS --- */
+        #death-screen { background: rgba(20, 0, 0, 0.95); }
+        #death-box { border-color: #ff5555; box-shadow: 0 0 20px rgba(255, 0, 0, 0.2); }
+        #death-box h1 { color: #ff5555; text-shadow: 0 0 10px #ff0000; font-size: 60px; animation: flicker 2s infinite;}
+        
+        #win-screen { background: rgba(0, 30, 0, 0.95); }
+        #win-box { border-color: #4ade80; }
+        #win-box h1 { font-size: 60px; }
 
         @keyframes flicker {
-            0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; text-shadow: 0 0 10px #4ade80; }
-            20%, 24%, 55% { opacity: 0.4; text-shadow: none; }
+            0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; }
+            20%, 24%, 55% { opacity: 0.4; }
         }
     </style>
 </head>
@@ -38,28 +49,48 @@
     </div>
     <div id="crosshair">+</div>
     <div id="interaction-text">[ E ] Pick Up Flashlight</div>
-   
+    <div id="chase-ui">EVASION REQUIRED<br><span id="chase-time" style="font-size: 48px;">10.0</span></div>
+    
     <div id="jumpscare-overlay"></div>
+    <div id="yellow-flash"></div>
 
-    <div id="instructions">
-        <h1>PROJECT: ZERO-SUM</h1>
-        <p>Turn on the 3 Generators to restore power.</p>
-        <p style="color: #ff5555; font-weight: bold;">IF THE GLOWING EYES GET CLOSE... DO NOT MOVE.</p>
-        <p style="color: #aaa;">[ WASD ] Move | [ SHIFT ] Sprint | [ SPACE ] Jump</p>
-        <p style="color: #aaa;">[ E ] Interact | [ F ] Toggle Light</p>
-        <p style="margin-top: 30px;">CLICK HERE TO WAKE UP (Turn Volume Up)</p>
+    <div id="main-menu" class="screen" style="display: flex;">
+        <div class="menu-box">
+            <h1>PROJECT: ZERO-SUM</h1>
+            <p style="color: #aaa; margin-bottom: 30px;">[ SYSTEM OFFLINE ]</p>
+            <button class="btn" id="btn-start">Initialize Sequence</button><br>
+            <button class="btn" id="btn-lore">Access Data Logs</button>
+        </div>
     </div>
 
-    <div id="death-screen">
-        <h1>YOU MOVED</h1>
-        <p>Signal Lost.</p>
-        <p style="margin-top: 20px; cursor: pointer; text-decoration: underline;" onclick="location.reload()">Refresh to Try Again</p>
+    <div id="lore-screen" class="screen">
+        <div class="menu-box">
+            <h1>LOG #8492</h1>
+            <div class="lore-text">
+                > Turn on the 3 Generators to restore power.<br><br>
+                > The subjects are drawn to motion. <span style="color: #ff5555; font-weight: bold;">IF THE GLOWING EYES GET CLOSE... DO NOT MOVE.</span><br><br>
+                > <b>WARNING:</b> We have detected an Anomaly. When the lights flare <span style="color:yellow;">YELLOW</span>, you have 2 seconds to prepare. After that, you have exactly 10 seconds to <b>SPRINT</b> and break line of sight. Freezing will not save you from the Anomaly.<br><br>
+                > [ WASD ] Move | [ SHIFT ] Sprint | [ SPACE ] Jump<br>
+                > [ E ] Interact | [ F ] Toggle Light
+            </div>
+            <button class="btn" id="btn-back">Return</button>
+        </div>
     </div>
 
-    <div id="win-screen">
-        <h1>POWER RESTORED</h1>
-        <p>You Survived.</p>
-        <p style="margin-top: 20px; cursor: pointer; text-decoration: underline;" onclick="location.reload()">Play Again</p>
+    <div id="death-screen" class="screen">
+        <div class="menu-box" id="death-box">
+            <h1 id="death-reason">YOU MOVED</h1>
+            <p style="color: #aaa;">Signal Lost.</p>
+            <button class="btn" style="border-color: #ff5555; color: #ff5555;" onclick="location.reload()">Reboot System</button>
+        </div>
+    </div>
+
+    <div id="win-screen" class="screen">
+        <div class="menu-box" id="win-box">
+            <h1>POWER RESTORED</h1>
+            <p style="color: #aaa;">You Survived.</p>
+            <button class="btn" onclick="location.reload()">Return to Base</button>
+        </div>
     </div>
 
     <script type="module">
@@ -114,6 +145,30 @@
         let gensActive = 0; const totalGens = 3;
         const keys = {}, collidables = [], interactables = [];
         const activeLights = [];
+        
+        // Hunter State
+        let chaserActive = false;
+        let chaserWarning = false;
+        let nextChaseTime = Infinity;
+        let warningEndTime = 0;
+        let chaseEndTime = 0;
+
+        // --- UI Logic ---
+        document.getElementById('btn-lore').onclick = () => {
+            document.getElementById('main-menu').style.display = 'none';
+            document.getElementById('lore-screen').style.display = 'flex';
+        };
+        document.getElementById('btn-back').onclick = () => {
+            document.getElementById('lore-screen').style.display = 'none';
+            document.getElementById('main-menu').style.display = 'flex';
+        };
+        document.getElementById('btn-start').onclick = () => {
+            initAudio(); 
+            document.body.requestPointerLock(); 
+            document.getElementById('main-menu').style.display = 'none';
+            canMove = true; 
+            nextChaseTime = Date.now() + 45000; // First chase in 45 seconds
+        };
 
         // --- Player System ---
         const pitch = new THREE.Object3D(), yaw = new THREE.Object3D();
@@ -127,7 +182,7 @@
         arm.rotation.x = Math.PI / 2; arm.position.set(0.3, -0.4, -0.2); fpRig.add(arm);
         const heldLight = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.25), new THREE.MeshStandardMaterial({color: 0x111111, metalness: 0.8}));
         heldLight.rotation.x = Math.PI / 2; heldLight.position.set(0.3, -0.35, -0.55); fpRig.add(heldLight);
-       
+        
         const handGroup = new THREE.Group();
         const palm = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.06, 0.04), skinMat);
         palm.position.set(0, 0, 0.04); handGroup.add(palm);
@@ -189,14 +244,15 @@
             const gLight = new THREE.PointLight(0xff0000, 20, 15); gLight.position.set(0, 1.5, 0);
             gen.add(gLight); gen.userData.light = gLight;
             scene.add(gen); collidables.push(gen); interactables.push(gen);
-           
+            
             createMonster(x, z - 4);
         }
 
-        function createMonster(posX, posZ) {
+        function createMonster(posX, posZ, isHunter = false) {
             const monster = new THREE.Group();
-            const fleshMat = new THREE.MeshStandardMaterial({color: 0x444444, roughness: 0.9});
-           
+            const skinColor = isHunter ? 0x882222 : 0x444444; // Hunter is reddish
+            const fleshMat = new THREE.MeshStandardMaterial({color: skinColor, roughness: 0.9});
+            
             const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.2, 1.8), fleshMat); torso.position.y = 2; monster.add(torso);
             const head = new THREE.Mesh(new THREE.SphereGeometry(0.25), fleshMat); head.position.y = 3.1; monster.add(head);
 
@@ -207,12 +263,13 @@
             const rArm = new THREE.Mesh(armGeo, fleshMat); rArm.position.set(0.4, 2.8, 0); monster.add(rArm);
             const lLeg = new THREE.Mesh(legGeo, fleshMat); lLeg.position.set(-0.15, 1.2, 0); monster.add(lLeg);
             const rLeg = new THREE.Mesh(legGeo, fleshMat); rLeg.position.set(0.15, 1.2, 0); monster.add(rLeg);
-           
-            const eyeMat = new THREE.MeshBasicMaterial({color: 0xff0000});
+            
+            const eyeColor = isHunter ? 0xffff00 : 0xff0000;
+            const eyeMat = new THREE.MeshBasicMaterial({color: eyeColor});
             const lEye = new THREE.Mesh(new THREE.SphereGeometry(0.04), eyeMat); lEye.position.set(-0.1, 3.15, -0.22); monster.add(lEye);
             const rEye = new THREE.Mesh(new THREE.SphereGeometry(0.04), eyeMat); rEye.position.set(0.1, 3.15, -0.22); monster.add(rEye);
-           
-            const evilLight = new THREE.PointLight(0xff0000, 30, 10); evilLight.position.set(0, 3.1, -0.3);
+            
+            const evilLight = new THREE.PointLight(eyeColor, 30, 10); evilLight.position.set(0, 3.1, -0.3);
             monster.add(evilLight);
 
             const jaw = new THREE.Group(); jaw.position.set(0, 3.0, -0.23);
@@ -232,15 +289,18 @@
                 fakeTimer: 0,
                 walkTime: Math.random() * 10,
                 lArm: lArm, rArm: rArm, lLeg: lLeg, rLeg: rLeg,
-                evilLight: evilLight, eyeMat: eyeMat
+                evilLight: evilLight, eyeMat: eyeMat,
+                isHunter: isHunter
             };
-            scene.add(monster); monsters.push(monster);
+            scene.add(monster); 
+            if(!isHunter) monsters.push(monster);
+            return monster;
         }
 
         // 3. MAZE (DFS)
         const mazeSize = 15; const cellSize = 6;
         const grid = Array(mazeSize).fill().map(() => Array(mazeSize).fill(1));
-       
+        
         function carveMaze(cx, cy) {
             const dirs = [[0,-1], [0,1], [1,0], [-1,0]].sort(() => Math.random() - 0.5);
             for (let [dx, dy] of dirs) {
@@ -250,10 +310,10 @@
                 }
             }
         }
-       
+        
         for(let i=0; i<6; i++) { grid[7][i] = 0; }
         carveMaze(7, 5);
-       
+        
         const startX = -((mazeSize * cellSize) / 2) + (cellSize / 2); const startZ = 8;
         for(let x = 0; x < mazeSize; x++) {
             for(let z = 0; z < mazeSize; z++) {
@@ -284,17 +344,12 @@
 
         createMonster(0, startZ + (2 * cellSize));
         createMonster(startX + (3 * cellSize), startZ + (7 * cellSize));
+        
+        // Setup Hunter
+        const chaser = createMonster(0, -100, true);
+        chaser.visible = false;
 
         // --- Input Handling ---
-        document.getElementById('instructions').addEventListener('click', () => {
-            if(!canMove && !isDead && !isWon) {
-                initAudio(); // MUST INIT AUDIO ON USER CLICK
-                document.body.requestPointerLock();
-                document.getElementById('instructions').style.display='none';
-                canMove=true;
-            }
-        });
-
         window.onkeydown = (e) => {
             if(isDead || isWon) return;
             const k = e.key.toLowerCase(); keys[k] = true;
@@ -338,7 +393,7 @@
                     const genText = document.getElementById('gen-status');
                     genText.innerText = gensActive + " / 3";
                     genText.style.color = (gensActive === 3) ? "#4ade80" : "#ffff00";
-                   
+                    
                     if (gensActive >= totalGens) {
                         isWon = true; document.exitPointerLock(); document.getElementById('win-screen').style.display = 'flex';
                     }
@@ -346,27 +401,55 @@
             }
         }
 
-        function executeJumpscare(monster) {
+        function executeJumpscare(monster, reason = "YOU MOVED") {
             isDead = true;
             document.exitPointerLock();
-           
+            
             // Snap to face
             const dir = new THREE.Vector3(0, 0, -1).applyQuaternion(yaw.quaternion);
             monster.position.copy(yaw.position).add(dir.multiplyScalar(0.8));
             monster.position.y = 0; monster.lookAt(yaw.position);
-           
+            
             // Max Lights
             monster.userData.evilLight.intensity = 150;
             monster.userData.eyeMat.color.setHex(0xff0000);
 
             document.getElementById('jumpscare-overlay').style.display = 'block';
+            document.getElementById('chase-ui').style.display = 'none';
+            document.getElementById('yellow-flash').style.display = 'none';
             playJumpscareAudio(); // TRIGGER AUDIO
             renderer.render(scene, camera); // Render the terrifying frame
 
             setTimeout(() => {
                 document.getElementById('jumpscare-overlay').style.display = 'none';
+                document.getElementById('death-reason').innerText = reason;
                 document.getElementById('death-screen').style.display = 'flex';
             }, 600);
+        }
+
+        function triggerHunterChase() {
+            chaserWarning = true;
+            warningEndTime = Date.now() + 2000; // 2 seconds warning
+            
+            const flash = document.getElementById('yellow-flash');
+            flash.style.display = 'block';
+            
+            document.getElementById('chase-ui').style.display = 'block';
+            document.getElementById('chase-ui').innerHTML = 'ANOMALY DETECTED<br><span id="chase-time" style="font-size: 48px; color: #ff5555;">PREPARE TO RUN</span>';
+
+            // Spawn near player (8 units behind)
+            const pDir = new THREE.Vector3(0, 0, 1).applyQuaternion(yaw.quaternion);
+            chaser.position.copy(yaw.position).add(pDir.multiplyScalar(8));
+            chaser.position.y = 0;
+            chaser.visible = true;
+        }
+
+        function endHunterChase() {
+            chaserActive = false;
+            chaserWarning = false;
+            chaser.visible = false;
+            document.getElementById('chase-ui').style.display = 'none';
+            nextChaseTime = Date.now() + 45000; // Next chase in 45s
         }
 
         // --- Main Game Loop ---
@@ -406,9 +489,19 @@
 
                 if (isMoving && onGround) {
                     const moveVector = new THREE.Vector3(moveX, 0, moveZ).applyQuaternion(yaw.quaternion);
-                    const hitCaster = new THREE.Raycaster(yaw.position, moveVector.clone().normalize(), 0, 0.8);
-                    if (hitCaster.intersectObjects(collidables).length === 0) {
-                        yaw.position.add(moveVector); moveTime += (keys.shift ? 0.25 : 0.15);
+                    
+                    // SPLIT AXIS COLLISION (SLIDING)
+                    const rayX = new THREE.Raycaster(yaw.position, new THREE.Vector3(Math.sign(moveVector.x), 0, 0), 0, 0.8);
+                    const canMoveX = Math.abs(moveVector.x) > 0 && rayX.intersectObjects(collidables).length === 0;
+                    
+                    const rayZ = new THREE.Raycaster(yaw.position, new THREE.Vector3(0, 0, Math.sign(moveVector.z)), 0, 0.8);
+                    const canMoveZ = Math.abs(moveVector.z) > 0 && rayZ.intersectObjects(collidables).length === 0;
+
+                    if (canMoveX) yaw.position.x += moveVector.x;
+                    if (canMoveZ) yaw.position.z += moveVector.z;
+
+                    if (canMoveX || canMoveZ) {
+                        moveTime += (keys.shift ? 0.25 : 0.15);
                         camera.position.y = 1.6 + Math.sin(moveTime) * (keys.shift ? 0.06 : 0.04);
                         if (hasFlashlight) { fpRig.position.y = Math.sin(moveTime * 2) * 0.01; fpRig.position.x = Math.cos(moveTime) * 0.01; }
                     }
@@ -423,6 +516,56 @@
             const statusUi = document.getElementById('status-text');
             if (inSafeRoom) { statusUi.innerText = "SAFE ZONE"; statusUi.style.color = "#4ade80"; }
             else { statusUi.innerText = "DANGER"; statusUi.style.color = "#ff5555"; }
+
+            // === HUNTER AI ===
+            if (canMove && !inSafeRoom && Date.now() > nextChaseTime && !chaserActive && !chaserWarning) {
+                triggerHunterChase();
+            }
+
+            if (chaserWarning) {
+                let warnTimeLeft = (warningEndTime - Date.now()) / 1000;
+                if (warnTimeLeft <= 0) {
+                    // Start the real chase!
+                    chaserWarning = false;
+                    chaserActive = true;
+                    chaseEndTime = Date.now() + 10000;
+                    document.getElementById('yellow-flash').style.display = 'none';
+                    document.getElementById('chase-ui').innerHTML = 'EVASION REQUIRED<br><span id="chase-time" style="font-size: 48px; color: #ffff00;">10.0</span>';
+                } else {
+                    // Look at player while waiting
+                    chaser.lookAt(yaw.position.x, chaser.position.y, yaw.position.z);
+                }
+            } else if (chaserActive) {
+                let timeLeft = (chaseEndTime - Date.now()) / 1000;
+                document.getElementById('chase-time').innerText = timeLeft.toFixed(1);
+                
+                if (timeLeft <= 0) {
+                    endHunterChase();
+                } else {
+                    chaser.lookAt(yaw.position.x, chaser.position.y, yaw.position.z);
+                    const cDist = chaser.position.distanceTo(yaw.position);
+                    
+                    const fwd = new THREE.Vector3(0,0,-1).applyQuaternion(chaser.quaternion);
+                    const ray = new THREE.Raycaster(new THREE.Vector3(chaser.position.x, 1, chaser.position.z), fwd, 0, 1.2);
+                    if (ray.intersectObjects(collidables).length === 0) {
+                        chaser.translateZ(-0.18); // Faster than normal monsters
+                    } else {
+                        // Keep pressure up if stuck during the 10s
+                        chaser.position.lerp(yaw.position, 0.01); 
+                    }
+
+                    // Animate hunter
+                    chaser.userData.walkTime += 0.4;
+                    chaser.userData.lLeg.rotation.x = Math.sin(chaser.userData.walkTime) * 0.6; 
+                    chaser.userData.rLeg.rotation.x = Math.sin(chaser.userData.walkTime + Math.PI) * 0.6;
+                    chaser.userData.lArm.rotation.x = Math.sin(chaser.userData.walkTime + Math.PI) * 0.3; 
+                    chaser.userData.rArm.rotation.x = Math.sin(chaser.userData.walkTime) * 0.3;
+
+                    if (cDist < 1.5) {
+                        executeJumpscare(chaser, "ANOMALY DETECTED"); return;
+                    }
+                }
+            }
 
             // === MONSTER AI FIXES ===
             for(let i=0; i<monsters.length; i++) {
@@ -440,7 +583,7 @@
                 const mDirFwd = new THREE.Vector3(0, 0, -1).applyQuaternion(monster.quaternion);
                 const mDirBwd = new THREE.Vector3(0, 0, 1).applyQuaternion(monster.quaternion);
                 const mOrigin = monster.position.clone(); mOrigin.y += 1;
-               
+                
                 // Check in front
                 const mRayFwd = new THREE.Raycaster(mOrigin, mDirFwd, 0, 1.5);
                 if (mRayFwd.intersectObjects(collidables).length > 0) canMoveForward = false;
@@ -450,7 +593,7 @@
                 if (mRayBwd.intersectObjects(collidables).length > 0) canMoveBackward = false;
 
                 const data = monster.userData;
-               
+                
                 if (data.state === "HUNTING" || data.state === "LEAVING" || data.state === "FAKE_LEAVE" || data.state === "STARING") {
                     data.walkTime += (data.state === "FAKE_LEAVE" ? 0.3 : 0.1);
                     data.lLeg.rotation.x = Math.sin(data.walkTime) * 0.6; data.rLeg.rotation.x = Math.sin(data.walkTime + Math.PI) * 0.6;
